@@ -1,0 +1,40 @@
+<div id="div0" class="div0">
+  <form id="form0">
+    <input type="text" [(ngModel)]="persona.id" autocomplete="on" placeholder="Rut" required name="id" id="id">
+    <select [(ngModel)]="persona.tipo" required name="tipo" id="tipo">
+      <option value="1">Rut</option>
+      <option value="2">Pasaporte</option>
+    </select>
+    <button (click)="seguirId()" id="seguirId"><i class="material-icons">arrow_forward</i></button>
+  </form>
+</div>
+
+<div id="div1" class="div1">
+  <table>
+    <tr>
+
+      <td colspan="3">id: {{persona.id}} tipo: {{persona.tipo}} (1:Rut, 2: Pasaporte)</td>
+
+    </tr>
+    <tr>
+      <td><button style="background-color: lightblue" (click)="volverId()"><i class="material-icons">arrow_back</i></button></td>
+      <td>
+        <table>
+          
+            <tr>
+              <td colspan="4"><input class="input1" type="text" [(ngModel)]="persona.nombre" placeholder="nombre" required name="nombre" id="nombre"></td>
+              
+            </tr>
+            <tr>
+              <td colspan="2"><input class="input1" type="text" [(ngModel)]="persona.mail" placeholder="mail" required name="mail" id="mail"></td>
+              <td colspan="2"><input class="input1" type="text" [(ngModel)]="persona.fono" placeholder="fono" required name="fono" id="fono"></td>
+            </tr>
+          
+          
+        </table>
+      </td>
+      <td><button style="background-color: lightblue" (click)="seguirId()"><i class="material-icons">arrow_forward</i></button></td>
+    </tr>
+
+  </table>
+</div>
