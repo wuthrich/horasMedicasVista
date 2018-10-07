@@ -6,15 +6,18 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DatosmedicoComponent } from './datosmedico/datosmedico.component';
+import { HacerhorarioComponent } from './hacerhorario/hacerhorario.component';
 
 const routes: Routes = [
   { path: 'medico', component: DatosmedicoComponent },
+  { path: 'hacerhorario', component: HacerhorarioComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    DatosmedicoComponent
+    DatosmedicoComponent,
+    HacerhorarioComponent
   ],
   imports: [
     BrowserModule,
@@ -25,4 +28,7 @@ const routes: Routes = [
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+ 
+ }

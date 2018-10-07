@@ -1,6 +1,6 @@
 export class Persona {
     id:string="";
-    tipo:string="1";    
+    tipo:string="";    
     nombre:string="";
     mail:string="";
     fono:string="";

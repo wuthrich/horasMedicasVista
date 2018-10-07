@@ -6,6 +6,7 @@
       <option value="2">Pasaporte</option>
     </select>
     <button (click)="seguirId()" id="seguirId"><i class="material-icons">arrow_forward</i></button>
+    <!--  <button (click)="probar()" id="probar">Probar</button> -->
   </form>
 </div>
 
@@ -19,21 +20,61 @@
     <tr>
       <td><button style="background-color: lightblue" (click)="volverId()"><i class="material-icons">arrow_back</i></button></td>
       <td>
+        <form id="form1">
         <table>
-          
-            <tr>
-              <td colspan="4"><input class="input1" type="text" [(ngModel)]="persona.nombre" placeholder="nombre" required name="nombre" id="nombre"></td>
-              
+
+          <tr>
+            <td colspan="4"><input class="input1" type="text" [(ngModel)]="persona.nombre" placeholder="nombre completo"
+                required name="nombre" id="nombre"></td>
+
+          </tr>
+          <tr>
+            <td colspan="2"><input class="input1" type="email" [(ngModel)]="persona.mail" placeholder="mail ej: usuario@server.com" required
+                name="mail" id="mail"></td>
+            <td colspan="2"><input class="input1" type="text" [(ngModel)]="persona.fono" placeholder="fono ej: +569 77334999" required
+                name="fono" id="fono"></td>
+          </tr>
+          <tr>
+            <td colspan="4">
+                <select id="especialidades" [(ngModel)]="persona.especialidad" name="especialidad" required>
+                    <option value="0" disabled>Elija opción</option>    
+                      <!-- codigo generado en el ts -->  
+                  </select>
+                  <label>Especialidad</label>
+
+            </td>
+          </tr>
+
+          <tr>
+              <td >
+                  <select id="regiones" [(ngModel)]="persona.region" name="regiones" required (change)="cambioRegion()">
+                      <option value="0" disabled>Elija opción</option>    
+                        <!-- codigo generado en el ts -->  
+                    </select>
+                    <label>Regiones</label>
+  
+              </td>
+              <td >
+                  <select id="comunas" [(ngModel)]="persona.comuna" name="comunas" required (change)="cambioComuna()">                        
+                        <!-- codigo generado en el ts -->  
+                    </select>
+                    <label>Comunas</label>
+  
+              </td>
+              <td colspan="2">
+                  <select id="centros" [(ngModel)]="persona.centro" name="centros" required>                         
+                        <!-- codigo generado en el ts -->  
+                    </select>
+                    <label>Centros</label>
+  
+              </td>
             </tr>
-            <tr>
-              <td colspan="2"><input class="input1" type="text" [(ngModel)]="persona.mail" placeholder="mail" required name="mail" id="mail"></td>
-              <td colspan="2"><input class="input1" type="text" [(ngModel)]="persona.fono" placeholder="fono" required name="fono" id="fono"></td>
-            </tr>
-          
-          
+
+
         </table>
+      </form>
       </td>
-      <td><button style="background-color: lightblue" (click)="seguirId()"><i class="material-icons">arrow_forward</i></button></td>
+      <td><button style="background-color: lightblue" (click)="seguirPersistente()"><i class="material-icons">arrow_forward</i></button></td>
     </tr>
 
   </table>
