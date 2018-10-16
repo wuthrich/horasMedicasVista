@@ -18,10 +18,14 @@ export class Calendariosemanal {
     grabado:boolean;
 
    /**
+    * nunca poner metodos en el pojo (Se nota que vengo de Java) porque al setearlo con 
+    * datos de un servicio Se pierde su contenido    * 
+    * 
     * Le suma una semana a this y copia los demas datos
     * exepto el atributo grabado que lo deja como falso    * 
-    */
+    
     proximaSemana(){
+        console.log('entro en proximaSemana');
         let clon=new Calendariosemanal();
         let semanaProxima = moment().isoWeekYear(this.anio).isoWeek(this.semana).add(1, 'w');
             
@@ -38,9 +42,9 @@ export class Calendariosemanal {
         clon.personaId=this.personaId;
         clon.personaNombre=this.personaNombre;
 
-        clon.anio=semanaProxima.format('YYYY');
-        clon.mes=semanaProxima.format('M');
-        clon.semana=semanaProxima.format('W');        
+        clon.anio= Number.parseInt(semanaProxima.format('YYYY'));
+        clon.mes= Number.parseInt(semanaProxima.format('M'));
+        clon.semana= Number.parseInt(semanaProxima.format('W'));        
         clon.diaDeLaSemanaQueSeHizo=moment().isoWeekday();
         
         clon.encabezados = encabezados;
@@ -62,5 +66,5 @@ export class Calendariosemanal {
         clon.grabado = false;
 
         return clon;
-    }
+    }*/
 }

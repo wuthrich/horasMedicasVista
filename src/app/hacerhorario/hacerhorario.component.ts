@@ -30,6 +30,10 @@ export class HacerhorarioComponent implements OnInit {
 
   constructor(private fachada: FachadaService, private router: Router) { }
 
+  actualizar(){
+    
+  }
+
   llenarPaginacion() {
     this.atras = "";
     this.adelante = "";
@@ -54,19 +58,59 @@ export class HacerhorarioComponent implements OnInit {
   }
 
   seguir() {
-    //grabar calendario actual
 
     if (null == this.calendarios[++this.indexCalendario]) {
-      let semanaProxima = this.calendarioActual.proximaSemana();
-      this.calendarios[this.indexCalendario] = semanaProxima;
-      console.log("Se crea la proxima semana");
+
+      if (!this.calendarioActual.grabado) {//Es el ultimo calendario, se averigua si esta grabado
+
+        if (!confirm("Se grabara el horario, si se toma una hora no se podra manipular, seguro de seguir!")) {
+          return;
+        }
+
+        //grabar calendario actual
+        this.calendarioActual.grabado = true;
+        this.fachada.calendarioPersiste(this.calendarioActual)
+          .toPromise().then(data => {
+            var datosjson = data as any;
+            console.log("calendarioPersiste: " + JSON.stringify(datosjson));
+            if (datosjson.ok) {
+              console.log('El calendario se guardo exitosamente, hora: ' + datosjson.time);
+              let semanaProxima = this.fachada.proximaSemana(this.calendarioActual);//this.calendarioActual.proximaSemana();
+              this.calendarios[this.indexCalendario] = semanaProxima;
+              this.calendarioActual = this.calendarios[this.indexCalendario];
+              this.pintarTabla();
+              this.llenarPaginacion();
+              console.log("Se crea la proxima semana");
+            } else {
+              this.calendarioActual.grabado = false;
+              --this.indexCalendario;//queda en el mismo calendario
+              console.log('Problemas al grabar el calendario' + datosjson.error);
+            }
+          }).catch(error => {
+            this.calendarioActual.grabado = false;
+            --this.indexCalendario;//queda en el mismo calendario
+            console.log('Ha ocurrido un error al llamar el server calendariosemanal: ', JSON.stringify(error));
+            //this.router.navigate(['/error']);
+          });
+
+      } else {
+        console.log('Se crea calendario nuevo');
+        let semanaProxima = this.fachada.proximaSemana(this.calendarioActual);//this.calendarioActual.proximaSemana();
+        this.calendarios[this.indexCalendario] = semanaProxima;
+        this.calendarioActual = this.calendarios[this.indexCalendario];
+        this.pintarTabla();
+        this.llenarPaginacion();
+      }
+
+
+    } else { //No esta nulo el siguiente calendario asi que solo se muestra
+
+      this.calendarioActual = this.calendarios[this.indexCalendario];
+      this.pintarTabla();
+      this.llenarPaginacion();
     }
 
-    this.calendarioActual = this.calendarios[this.indexCalendario];
 
-    this.pintarTabla();
-
-    this.llenarPaginacion();
 
   }
 
@@ -185,8 +229,10 @@ export class HacerhorarioComponent implements OnInit {
     encabezados[6] = moment().isoWeekday(6).format('dddd D');//sabado
     encabezados[7] = moment().isoWeekday(7).format('dddd D');//domingo
 
+    primerCalendario.personaId = this.fachada.persona.id;
+    primerCalendario.personaNombre = this.fachada.persona.nombre;
     primerCalendario.anio = anioActual;
-    primerCalendario.mes = nombreDia.format('M');
+    primerCalendario.mes = Number.parseInt(nombreDia.format('M'));
     primerCalendario.semana = semanaActual;
     primerCalendario.diaDeLaSemanaQueSeHizo = diaActual;
     primerCalendario.encabezados = encabezados;
@@ -315,16 +361,44 @@ export class HacerhorarioComponent implements OnInit {
 
   }
 
-  pintarTabla(){
+  pintarTabla() {
     this.lineas = this.fachada.devolverLineasDeHoras(this.calendarioActual.horas);
     this.horasCabezeras = this.fachada.devolverDiasDeHoras(this.calendarioActual.horas);
+    this.desdeComponente = this.calendarioActual.desde;
+    this.hastaComponente = this.calendarioActual.hasta;
+    this.longitudHoraComponente = this.calendarioActual.longitudHora;
   }
 
   ngOnInit() {
 
-    this.crearPrimerCalendario();
-    this.hacerHoras();
-    this.pintarTabla();
+    if (null == this.fachada.persona) {
+      this.router.navigate(['/medico']);
+    }
+
+    let anioActual = moment().isoWeekYear();
+    let semanaActual = moment().isoWeek();
+    this.fachada.calendariosLoad(this.fachada.persona.id, anioActual, semanaActual)
+      .toPromise().then(data => {
+        var datosjson = data as any;
+        console.log("calendarioPersiste: " + JSON.stringify(datosjson));
+        if (datosjson.traedatos) {
+          this.calendarios = datosjson.calendarios;
+          this.indexCalendario = this.calendarios.length - 1;
+          this.calendarioActual = this.calendarios[this.indexCalendario];
+          this.llenarPaginacion();
+          this.pintarTabla();                  
+        } else {
+          console.log('No hay calendarios en Base de datos se hara el primero');
+          this.crearPrimerCalendario();
+          this.hacerHoras();
+          this.pintarTabla();
+        }
+      }).catch(error => {
+        console.log('Ha ocurrido un error al llamar el server calendariosLoad: ', JSON.stringify(error));
+        //this.router.navigate(['/error']);
+      });
+
+
 
   }
 

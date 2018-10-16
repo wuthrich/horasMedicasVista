@@ -16,6 +16,8 @@ function escapeRegExp(string) {
 export class DatosmedicoComponent implements OnInit {
 
   private persona: Persona;
+  private comunas: Opcionselect[];
+  private centros: Opcionselect[];
 
   constructor(private fachada: FachadaService, private router: Router) { }
 
@@ -41,8 +43,31 @@ export class DatosmedicoComponent implements OnInit {
   }
 
   seleccionarOpcionesComunaCentro(){
-    this.cambioRegion();
-    this.cambioComuna();
+    //No se pueden ocupar estos metodos porque son asyncronos
+    //this.cambioRegion();
+    //this.cambioComuna();
+
+    //Region seleccionada
+      let regionint = Number.parseInt(this.persona.region);
+      let selectComunas = document.getElementById("comunas") as HTMLSelectElement;
+      let selectCentros = document.getElementById("centros") as HTMLSelectElement;
+      this.borrarTodasOpcionesSelect(selectCentros);
+      this.borrarTodasOpcionesSelect(selectComunas);
+
+      //comuna seleccionada
+      let selected = Number.parseInt(this.persona.comuna);
+   
+        this.llenarSelectSegunPadre(regionint, this.comunas, selectComunas);
+        if(this.persona.comuna==""){
+          this.persona.comuna = "0";//para dejar selected la opcion 0 : Elija opción, si es que no hay una elejida
+        }      
+           
+        
+        this.llenarSelectSegunPadre(selected, this.centros, selectCentros);
+        if(this.persona.centro == ""){
+          this.persona.centro = "0";//para dejar selected la opcion 0 : Elija opción
+        }
+     
   }
 
   seguirId() {
@@ -241,6 +266,13 @@ export class DatosmedicoComponent implements OnInit {
       }
     );
 
+    this.fachada.getCentros().then(centrosObj => {
+      this.centros = centrosObj as Opcionselect[];      
+    });
+
+    this.fachada.getComunas().then(comunasObj => {
+      this.comunas = comunasObj as Opcionselect[];      
+    });
 
 
   }

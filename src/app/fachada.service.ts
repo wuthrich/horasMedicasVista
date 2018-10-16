@@ -6,6 +6,9 @@ import { Persona } from './persona';
 import { Horaslinea } from './horaslinea';
 import { Hora } from './hora';
 import { Horascabezeras } from './horascabezeras';
+import { Calendariosemanal } from './calendariosemanal';
+
+declare var moment;
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +35,63 @@ export class FachadaService {
 
   }
 
+     /**
+    * Le suma una semana a calendario y copia los demas datos
+    * exepto el atributo grabado que lo deja como falso    * 
+    */
+   proximaSemana(calendario:Calendariosemanal){    
+    let clon=new Calendariosemanal();
+    let semanaProxima = moment().isoWeekYear(calendario.anio).isoWeek(calendario.semana).add(1, 'w');
+        
+    let encabezados: Array<any> = new Array(8);
+    encabezados[0] = "horas";
+    encabezados[1] = semanaProxima.isoWeekday(1).format('dddd D');//lunes
+    encabezados[2] = semanaProxima.isoWeekday(2).format('dddd D');//martes
+    encabezados[3] = semanaProxima.isoWeekday(3).format('dddd D');//miercoles
+    encabezados[4] = semanaProxima.isoWeekday(4).format('dddd D');//jueves
+    encabezados[5] = semanaProxima.isoWeekday(5).format('dddd D');//viernes
+    encabezados[6] = semanaProxima.isoWeekday(6).format('dddd D');//sabado
+    encabezados[7] = semanaProxima.isoWeekday(7).format('dddd D');//domingo
+
+    clon.personaId=calendario.personaId;
+    clon.personaNombre=calendario.personaNombre;
+
+    clon.anio= Number.parseInt(semanaProxima.format('YYYY'));
+    clon.mes= Number.parseInt(semanaProxima.format('M'));
+    clon.semana= Number.parseInt(semanaProxima.format('W'));        
+    clon.diaDeLaSemanaQueSeHizo=moment().isoWeekday();
+    
+    clon.encabezados = encabezados;
+
+    clon.desde = calendario.desde;
+    clon.hasta = calendario.hasta;
+    clon.longitudHora = calendario.longitudHora;
+    clon.numeroCitas = calendario.numeroCitas;
+
+    //Transformamos el array a un string y luego lo parseamos a un json para clonarlo        
+    let horas = JSON.parse(JSON.stringify(calendario.horas));
+    //Dejamos todas las horas como no tomadas
+    for(let hora of horas){
+        delete hora.tomada;
+        delete hora.persona;
+    }
+    clon.horas = horas;
+
+    clon.grabado = false;
+
+    return clon;
+}
+
+  calendarioPersiste(calendarioSemanal: Calendariosemanal) {    
+
+    return this.http.put(this.url + '/rest/calendariosemanal', calendarioSemanal, { responseType: 'json' });
+
+  }
+
+  calendariosLoad(personaId: string, anio:number, semana:number) {
+    return this.http.get(this.url + '/rest/calendariosemanal/' + personaId+"/"+anio+"/"+semana, { responseType: 'json' });
+  }
+
   personaLoad(id: string) {
     return this.http.get(this.url + '/rest/Persona/' + id, { responseType: 'json' });
   }
@@ -40,6 +100,7 @@ export class FachadaService {
 
     this.persona = persona;//Seteamos la persona para que se pueda seguir ocupando en otros componentes
 
+    console.log('Persona se seteo con: ', JSON.stringify(this.persona));
     this.http.post(this.url + '/rest/Persona/', persona, { responseType: 'json' }).toPromise().then(data => {
       var datosjson = data as any;
       console.log("personaUpset: " + JSON.stringify(datosjson));

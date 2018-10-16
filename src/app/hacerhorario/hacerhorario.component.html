@@ -1,8 +1,16 @@
 <div class="card">
   <div class="container">
-    <p><button (click)="salir()"><i class="material-icons">assignment_return</i></button>
-      <b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b>
-    </p>
+      <table style="width: 100%;">
+          <tr>
+            <td style="width: 10%;"><button (click)="salir()"><i class="material-icons">assignment_return</i>Salir</button></td>
+            <td style="width: 30%;"></td>
+            <td style="width: 10%;"><b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b></td>
+            <td style="width: 30%;"></td>
+            <td style="width: 10%;" *ngIf="calendarioActual.grabado"><button (click)="actualizar()"><i class="material-icons">assignment_returned</i>Actualizar</button></td>
+          </tr>
+        </table>
+
+    
 
     
       <table style="width: 100%;">
