@@ -1,0 +1,67 @@
+<div id="div0" class="div0">
+
+  <table style="width: 100%" >
+
+
+    <tr>
+      <td style="width: 15%"><button style="background-color: lightblue" (click)="volver()"><i class="material-icons">arrow_back</i></button></td>
+
+      <td style="width: 70%" align="center">
+        <table >
+          <tr>
+            <td>
+              <select id="regiones" [(ngModel)]="especialistaSeleccionado.region" name="regiones" required (change)="cambioRegion()">
+                <!-- codigo generado en el ts -->
+              </select>
+              <label>Regiones</label>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="comunas" [(ngModel)]="especialistaSeleccionado.comuna" name="comunas" required (change)="cambioComuna()">
+                <!-- codigo generado en el ts -->
+              </select>
+              <label>Comunas</label>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="centros" [(ngModel)]="especialistaSeleccionado.centro" name="centros" required (change)="cambioCentros()">
+                <!-- codigo generado en el ts -->
+              </select>
+              <label>Centros</label>
+
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="especialidades" [(ngModel)]="especialistaSeleccionado.especialidad" name="especialidades"
+                required>
+                <!-- codigo generado en el ts -->
+              </select>
+              <label>Especialidad</label>
+
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <select id="especialistas" [(ngModel)]="especialistaSeleccionado.id" name="especialistas" required>
+                <!-- codigo generado en el ts -->
+              </select>
+              <label>Especialista</label>
+
+            </td>
+          </tr>
+        </table>
+      </td>
+
+      <td style="width: 15%"><button style="background-color: lightblue" (click)="seguirPersistente()"><i class="material-icons">arrow_forward</i></button></td>
+    </tr>
+
+
+  </table>
+
+</div>

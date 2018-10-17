@@ -7,8 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { DatosmedicoComponent } from './datosmedico/datosmedico.component';
 import { HacerhorarioComponent } from './hacerhorario/hacerhorario.component';
+import { DatospacienteComponent } from './datospaciente/datospaciente.component';
+import { EleccionmedicoComponent } from './eleccionmedico/eleccionmedico.component';
 
 const routes: Routes = [
+  { path: 'eleccionmedico', component: EleccionmedicoComponent },
+  { path: 'paciente', component: DatospacienteComponent },
   { path: 'medico', component: DatosmedicoComponent },
   { path: 'hacerhorario', component: HacerhorarioComponent }
 ];
@@ -17,7 +21,9 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     DatosmedicoComponent,
-    HacerhorarioComponent
+    HacerhorarioComponent,
+    DatospacienteComponent,
+    EleccionmedicoComponent
   ],
   imports: [
     BrowserModule,

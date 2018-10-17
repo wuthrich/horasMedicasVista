@@ -96,6 +96,10 @@ export class FachadaService {
     return this.http.get(this.url + '/rest/Persona/' + id, { responseType: 'json' });
   }
 
+  especialistasConCalendario(region:string, anio:number, semana:number) {
+    return this.http.get(this.url + '/rest/Persona/especialistas/' + region+"/"+anio+"/"+semana, { responseType: 'json' });
+  }
+
   personaPersiste(persona: Persona) {
 
     this.persona = persona;//Seteamos la persona para que se pueda seguir ocupando en otros componentes

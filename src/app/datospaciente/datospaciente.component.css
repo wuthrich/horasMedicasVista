@@ -1,0 +1,39 @@
+.div0 {
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    background-color: lightblue;
+    margin-top: 5px;
+}
+
+.div1 {
+    width: 100%;
+    padding: 75px 0;
+    text-align: center;
+    background-color: lightblue;
+    margin-top: 5px;
+    display: none;
+    overflow-x:auto;
+}
+
+.input1{
+    width: 100%;    
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px; 
+     
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
