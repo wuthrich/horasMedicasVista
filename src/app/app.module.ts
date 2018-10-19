@@ -9,8 +9,10 @@ import { DatosmedicoComponent } from './datosmedico/datosmedico.component';
 import { HacerhorarioComponent } from './hacerhorario/hacerhorario.component';
 import { DatospacienteComponent } from './datospaciente/datospaciente.component';
 import { EleccionmedicoComponent } from './eleccionmedico/eleccionmedico.component';
+import { TomarhoraComponent } from './tomarhora/tomarhora.component';
 
 const routes: Routes = [
+  { path: 'tomarhora', component: TomarhoraComponent },
   { path: 'eleccionmedico', component: EleccionmedicoComponent },
   { path: 'paciente', component: DatospacienteComponent },
   { path: 'medico', component: DatosmedicoComponent },
@@ -23,7 +25,8 @@ const routes: Routes = [
     DatosmedicoComponent,
     HacerhorarioComponent,
     DatospacienteComponent,
-    EleccionmedicoComponent
+    EleccionmedicoComponent,
+    TomarhoraComponent
   ],
   imports: [
     BrowserModule,

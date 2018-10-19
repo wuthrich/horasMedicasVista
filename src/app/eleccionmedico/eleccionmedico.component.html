@@ -19,7 +19,7 @@
           </tr>
           <tr>
             <td>
-              <select id="comunas" [(ngModel)]="especialistaSeleccionado.comuna" name="comunas" required (change)="cambioComuna()">
+              <select id="comunas" [(ngModel)]="especialistaSeleccionado.comuna" name="comunas" (change)="cambioComuna()">
                 <!-- codigo generado en el ts -->
               </select>
               <label>Comunas</label>
@@ -28,8 +28,9 @@
           </tr>
           <tr>
             <td>
-              <select id="centros" [(ngModel)]="especialistaSeleccionado.centro" name="centros" required (change)="cambioCentros()">
-                <!-- codigo generado en el ts -->
+              <select id="centros" [(ngModel)]="especialistaSeleccionado.centro" name="centros" (change)="cambioCentros()">
+                <!-- codigo generado en el ts 
+                <option>Todas</option>-->
               </select>
               <label>Centros</label>
 
@@ -37,8 +38,7 @@
           </tr>
           <tr>
             <td>
-              <select id="especialidades" [(ngModel)]="especialistaSeleccionado.especialidad" name="especialidades"
-                required>
+              <select id="especialidades" [(ngModel)]="especialistaSeleccionado.especialidad" name="especialidades" (change)="cambioEspecialidades()">
                 <!-- codigo generado en el ts -->
               </select>
               <label>Especialidad</label>
@@ -58,7 +58,7 @@
         </table>
       </td>
 
-      <td style="width: 15%"><button style="background-color: lightblue" (click)="seguirPersistente()"><i class="material-icons">arrow_forward</i></button></td>
+      <td style="width: 15%"><button style="background-color: lightblue" (click)="seguir()"><i class="material-icons">arrow_forward</i></button></td>
     </tr>
 
 

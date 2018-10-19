@@ -229,8 +229,9 @@ export class HacerhorarioComponent implements OnInit {
     encabezados[6] = moment().isoWeekday(6).format('dddd D');//sabado
     encabezados[7] = moment().isoWeekday(7).format('dddd D');//domingo
 
-    primerCalendario.personaId = this.fachada.persona.id;
-    primerCalendario.personaNombre = this.fachada.persona.nombre;
+    //primerCalendario.personaId = this.fachada.persona.id;
+    //primerCalendario.personaNombre = this.fachada.persona.nombre;
+    primerCalendario.especialista = this.fachada.persona;
     primerCalendario.anio = anioActual;
     primerCalendario.mes = Number.parseInt(nombreDia.format('M'));
     primerCalendario.semana = semanaActual;
@@ -380,7 +381,7 @@ export class HacerhorarioComponent implements OnInit {
     this.fachada.calendariosLoad(this.fachada.persona.id, anioActual, semanaActual)
       .toPromise().then(data => {
         var datosjson = data as any;
-        console.log("calendarioPersiste: " + JSON.stringify(datosjson));
+        console.log("calendariosLoad: " + JSON.stringify(datosjson));
         if (datosjson.traedatos) {
           this.calendarios = datosjson.calendarios;
           this.indexCalendario = this.calendarios.length - 1;

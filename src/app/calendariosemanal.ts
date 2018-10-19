@@ -1,10 +1,10 @@
 import { Hora } from './hora';
+import { Persona } from './persona';
 
 declare var moment;
 
 export class Calendariosemanal {    
-    personaId:string;
-    personaNombre:string;
+    especialista:Persona;    
     anio:number;
     mes:number;
     semana:number;

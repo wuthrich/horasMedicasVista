@@ -20,7 +20,8 @@ export class FachadaService {
   private comunas: Opcionselect[];
   private centros: Opcionselect[];
   private especialidades: Opcionselect[];
-  public persona: Persona;
+  public persona: Persona;//Medico, siempre (OJO)
+  public paciente: Persona;
 
   constructor(private http: HttpClient, private router: Router) {
     this.url = window.location.protocol + "//" + window.location.hostname;
@@ -53,8 +54,9 @@ export class FachadaService {
     encabezados[6] = semanaProxima.isoWeekday(6).format('dddd D');//sabado
     encabezados[7] = semanaProxima.isoWeekday(7).format('dddd D');//domingo
 
-    clon.personaId=calendario.personaId;
-    clon.personaNombre=calendario.personaNombre;
+    //clon.personaId=calendario.personaId;
+    //clon.personaNombre=calendario.personaNombre;
+    clon.especialista = calendario.especialista;
 
     clon.anio= Number.parseInt(semanaProxima.format('YYYY'));
     clon.mes= Number.parseInt(semanaProxima.format('M'));
@@ -102,7 +104,11 @@ export class FachadaService {
 
   personaPersiste(persona: Persona) {
 
-    this.persona = persona;//Seteamos la persona para que se pueda seguir ocupando en otros componentes
+    //Seteamos la persona para que se pueda seguir ocupando en otros componentes
+    //Pero cuando entramos como paciente al escoger al especialista se cambia el puntero
+    //y esta variable se hace apuntar al paciente para que this.persona siempre sea un medico
+    //EleccionmedicoComponent.seguir();
+    this.persona = persona;
 
     console.log('Persona se seteo con: ', JSON.stringify(this.persona));
     this.http.post(this.url + '/rest/Persona/', persona, { responseType: 'json' }).toPromise().then(data => {

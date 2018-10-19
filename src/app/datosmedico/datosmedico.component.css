@@ -2,7 +2,7 @@
     width: 100%;
     padding: 20px 0;
     text-align: center;
-    background-color: lightblue;
+    background-color: #be51be;
     margin-top: 5px;
 }
 
@@ -10,7 +10,7 @@
     width: 100%;
     padding: 75px 0;
     text-align: center;
-    background-color: lightblue;
+    background-color: #be51be;
     margin-top: 5px;
     display: none;
     overflow-x:auto;

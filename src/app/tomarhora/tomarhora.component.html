@@ -1,0 +1,57 @@
+<div class="card">
+  <div class="container">
+      <table style="width: 100%;">
+          <tr>
+            <td style="width: 10%;"><button (click)="salir()"><i class="material-icons">assignment_return</i>Salir</button></td>
+            <td style="width: 30%;"></td>
+            <td style="width: 10%;"><b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b></td>
+            <td style="width: 30%;"></td>
+            <td style="width: 10%;"></td>
+          </tr>
+        </table>
+
+    
+
+    
+      <table style="width: 100%;">
+        <tr>
+          <td style="width: 10%;"><button [disabled]="0==indexCalendario" (click)="retroceder()"><i class="material-icons">skip_previous</i></button></td>
+          <td style="width: 30%;">{{atras}}</td>
+          <td style="width: 10%;"><b>Semana: {{calendarioActual.semana}} </b> </td>
+          <td style="width: 30%;">{{adelante}}</td>
+          <td style="width: 10%;"><button (click)="seguir()"><i class="material-icons">skip_next</i></button></td>
+        </tr>
+      </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="container">
+
+    <table id="horario" class="tabla">
+
+      <tr>
+        <th *ngFor="let titulo of calendarioActual.encabezados ; let i = index">{{titulo}}</th>
+      </tr>
+
+      <tr *ngFor="let linea of lineas">
+        <td>{{linea.linea}} - {{linea.hora}} </td>
+        <td><input type="checkbox" [(ngModel)]="linea.lunes.ofrecida">
+
+          <div *ngIf="null!=linea.lunes.persona; then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>linea.lunes.persona.nombre</ng-template>
+          <ng-template #elseBlock></ng-template>
+
+        </td>
+        <td><input type="checkbox" [(ngModel)]="linea.martes.ofrecida"></td>
+        <td><input type="checkbox" [(ngModel)]="linea.miercoles.ofrecida"></td>
+        <td><input type="checkbox" [(ngModel)]="linea.jueves.ofrecida"></td>
+        <td><input type="checkbox" [(ngModel)]="linea.viernes.ofrecida"></td>
+        <td><input type="checkbox" [(ngModel)]="linea.sabado.ofrecida"></td>
+        <td><input type="checkbox" [(ngModel)]="linea.domingo.ofrecida"></td>
+      </tr>
+
+    </table>
+
+  </div>
+</div>
