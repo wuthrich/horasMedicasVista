@@ -127,7 +127,7 @@ export class DatosmedicoComponent implements OnInit {
       return;
     }
 
-    this.fachada.personaPersiste(this.persona);
+    this.fachada.personaPersiste(this.persona, 'medico');
     this.router.navigate(['/hacerhorario']);
   }
 

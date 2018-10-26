@@ -1,3 +1,4 @@
+//import {Horatomada} from './horatomada';
 export class Persona {
     id:string="";
     tipo:string="";    
@@ -7,5 +8,6 @@ export class Persona {
     especialidad:string="";
     region:string="";
     comuna:string="";    
-    centro:string="";  
+    centro:string="";
+    //horasTomadas:Array<Horatomada>;  
 }

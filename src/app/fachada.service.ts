@@ -20,7 +20,7 @@ export class FachadaService {
   private comunas: Opcionselect[];
   private centros: Opcionselect[];
   private especialidades: Opcionselect[];
-  public persona: Persona;//Medico, siempre (OJO)
+  public medico: Persona;//Medico, siempre (OJO)
   public paciente: Persona;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -36,14 +36,47 @@ export class FachadaService {
 
   }
 
-     /**
-    * Le suma una semana a calendario y copia los demas datos
-    * exepto el atributo grabado que lo deja como falso    * 
-    */
-   proximaSemana(calendario:Calendariosemanal){    
-    let clon=new Calendariosemanal();
+  diaEnPalabrasCastellano(dia: number) {
+    let diaEnPalabra:string;
+    switch (dia) {
+      case 1:
+        diaEnPalabra = "lunes";
+        break;
+      case 2:
+        diaEnPalabra = "martes";
+        break;
+      case 3:
+        diaEnPalabra = "miercoles";
+        break;
+      case 4:
+        diaEnPalabra = "jueves";
+        break;
+      case 5:
+        diaEnPalabra = "viernes";
+        break;
+      case 6:
+        diaEnPalabra = "sabado";
+        break;
+      case 7:
+        diaEnPalabra = "domingo";
+        break;
+
+      default:
+        break;
+    }
+
+    return diaEnPalabra;
+
+  }
+
+  /**
+ * Le suma una semana a calendario y copia los demas datos
+ * exepto el atributo grabado que lo deja como falso    * 
+ */
+  proximaSemana(calendario: Calendariosemanal) {
+    let clon = new Calendariosemanal();
     let semanaProxima = moment().isoWeekYear(calendario.anio).isoWeek(calendario.semana).add(1, 'w');
-        
+
     let encabezados: Array<any> = new Array(8);
     encabezados[0] = "horas";
     encabezados[1] = semanaProxima.isoWeekday(1).format('dddd D');//lunes
@@ -58,11 +91,11 @@ export class FachadaService {
     //clon.personaNombre=calendario.personaNombre;
     clon.especialista = calendario.especialista;
 
-    clon.anio= Number.parseInt(semanaProxima.format('YYYY'));
-    clon.mes= Number.parseInt(semanaProxima.format('M'));
-    clon.semana= Number.parseInt(semanaProxima.format('W'));        
-    clon.diaDeLaSemanaQueSeHizo=moment().isoWeekday();
-    
+    clon.anio = Number.parseInt(semanaProxima.format('YYYY'));
+    clon.mes = Number.parseInt(semanaProxima.format('M'));
+    clon.semana = Number.parseInt(semanaProxima.format('W'));
+    clon.diaDeLaSemanaQueSeHizo = moment().isoWeekday();
+
     clon.encabezados = encabezados;
 
     clon.desde = calendario.desde;
@@ -73,44 +106,74 @@ export class FachadaService {
     //Transformamos el array a un string y luego lo parseamos a un json para clonarlo        
     let horas = JSON.parse(JSON.stringify(calendario.horas));
     //Dejamos todas las horas como no tomadas
-    for(let hora of horas){
-        delete hora.tomada;
-        delete hora.persona;
+    for (let hora of horas) {
+      hora.tomada=false;
+      delete hora.persona;
     }
     clon.horas = horas;
 
     clon.grabado = false;
 
     return clon;
-}
+  }
 
-  calendarioPersiste(calendarioSemanal: Calendariosemanal) {    
+  calendarioActualizaTodasHoras(calendarioSemanal: Calendariosemanal) {
+    return this.http.post(this.url + '/rest/calendariosemanal/actualizar', calendarioSemanal, { responseType: 'json' });
+  }
+
+  calendarioActualizaHora(calendarioSemanal: Calendariosemanal, hora: Hora) {
+    let enviar: any = {};
+    enviar.calendario = calendarioSemanal;
+    enviar.hora = hora;
+
+    return this.http.post(this.url + '/rest/calendariosemanal', enviar, { responseType: 'json' });
+
+  }
+
+  calendarioPersiste(calendarioSemanal: Calendariosemanal) {
 
     return this.http.put(this.url + '/rest/calendariosemanal', calendarioSemanal, { responseType: 'json' });
 
   }
 
-  calendariosLoad(personaId: string, anio:number, semana:number) {
-    return this.http.get(this.url + '/rest/calendariosemanal/' + personaId+"/"+anio+"/"+semana, { responseType: 'json' });
+  calendariosLoad(personaId: string, anio: number, semana: number) {
+    return this.http.get(this.url + '/rest/calendariosemanal/' + personaId + "/" + anio + "/" + semana, { responseType: 'json' });
   }
 
   personaLoad(id: string) {
     return this.http.get(this.url + '/rest/Persona/' + id, { responseType: 'json' });
   }
 
-  especialistasConCalendario(region:string, anio:number, semana:number) {
-    return this.http.get(this.url + '/rest/Persona/especialistas/' + region+"/"+anio+"/"+semana, { responseType: 'json' });
+  especialistasConCalendario(region: string, anio: number, semana: number) {
+    return this.http.get(this.url + '/rest/Persona/especialistas/' + region + "/" + anio + "/" + semana, { responseType: 'json' });
   }
 
-  personaPersiste(persona: Persona) {
+  personaHorasTomadas(id: string) {
+    return this.http.get(this.url + '/rest/Persona/horastomadas/' + id, { responseType: 'json' });
+  }
 
-    //Seteamos la persona para que se pueda seguir ocupando en otros componentes
-    //Pero cuando entramos como paciente al escoger al especialista se cambia el puntero
-    //y esta variable se hace apuntar al paciente para que this.persona siempre sea un medico
-    //EleccionmedicoComponent.seguir();
-    this.persona = persona;
+  /**
+   * 
+   * @param persona Persona que se guardara en base de datos
+   * @param tipo medico o paciente, para guardar en fachada
+   */
+  personaPersiste(persona: Persona, tipo: string) {
 
-    console.log('Persona se seteo con: ', JSON.stringify(this.persona));
+    switch (tipo) {
+      case 'medico':
+        this.medico = persona;
+        break;
+
+      case 'paciente':
+        this.paciente = persona;
+        break;
+
+      default:
+        break;
+    }
+
+
+    //console.log('Persona se seteo con: ', JSON.stringify(this.persona));
     this.http.post(this.url + '/rest/Persona/', persona, { responseType: 'json' }).toPromise().then(data => {
       var datosjson = data as any;
       console.log("personaUpset: " + JSON.stringify(datosjson));
@@ -127,7 +190,7 @@ export class FachadaService {
   }
 
   devolverDiasDeHoras(horas: Array<Hora>) {
-    let cabezeras: Horascabezeras=new Horascabezeras();
+    let cabezeras: Horascabezeras = new Horascabezeras();
 
     for (let hora of horas) {
       switch (hora.dia) {
@@ -185,6 +248,10 @@ export class FachadaService {
 
         case 2:
           lineas[hora.linea - 1].martes = hora;
+          //console.log("devolverLineasDeHoras martes: "+JSON.stringify(hora));
+          //if(hora.tomada){
+          //console.log("devolverLineasDeHoras martes persona: "+JSON.stringify(hora.persona));
+          //}
           break;
 
         case 3:

@@ -86,6 +86,20 @@ export class DatospacienteComponent implements OnInit {
       }
     );
 
+    this.fachada.personaHorasTomadas(this.persona.id).toPromise().then(
+      datos => {
+        var datosjson = datos as any;
+        console.log("persona tiene horas: " + JSON.stringify(datosjson));
+        if (datosjson.traedatos) {         
+          console.log("Si trae datos de horas tomadas");
+        }
+      }
+    ).catch(
+      error => {
+        console.log("Ocurrio un error al Cargar horas tomadas por persona: " + JSON.stringify(error));
+      }
+    );
+
     this.habilitarDesavilitarDiv0(true);
     this.soloMostrar();
 
@@ -99,7 +113,7 @@ export class DatospacienteComponent implements OnInit {
       return;
     }
 
-    this.fachada.personaPersiste(this.persona);
+    this.fachada.personaPersiste(this.persona, 'paciente');
     this.router.navigate(['/eleccionmedico']);
   }
 

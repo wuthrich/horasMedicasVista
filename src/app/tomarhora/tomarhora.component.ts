@@ -5,6 +5,7 @@ import { Horaslinea } from './../horaslinea';
 import { Hora } from './../hora';
 import { Horascabezeras } from '../horascabezeras';
 import { Router } from '@angular/router';
+//import { Horatomada } from '../horatomada';
 
 declare var moment;
 
@@ -30,8 +31,109 @@ export class TomarhoraComponent implements OnInit {
 
   constructor(private fachada: FachadaService, private router: Router) { }
 
-  actualizar(){
+  prueba(){
+    console.log("Hora: "+JSON.stringify(this.calendarioActual.horas));
+  }
+
+  dejar(hora: Hora){
+    console.log("Dejar Hora: "+JSON.stringify(hora));
+    if (!confirm("Dejar!")) {
+      return false;  
+    }
+
+    hora.tomada = false;
+    //hora.persona = this.fachada.paciente;
+
+    this.fachada.calendarioActualizaHora(this.calendarioActual, hora)
+    .toPromise().then(data => {
+      var datosjson = data as any;
+      console.log("calendarioActualizado: " + JSON.stringify(datosjson));
+      if (datosjson.ok) {
+          this.calendarioActual = datosjson.calendarioActualizado;
+          this.calendarios[this.indexCalendario] = this.calendarioActual;          
+          //this.llenarPaginacion();
+          this.pintarTabla();  
+      } else {             
+        console.log('Problemas al actualizar el calendario' + datosjson.error);              
+        return false;
+      }
+    }).catch(error => {            
+      console.log('Ha ocurrido un error al llamar el server calendarioActualizaHoras: ', JSON.stringify(error));
+      return false;
+      //this.router.navigate(['/error']);
+    });
+  }
+
+  tomar(hora: Hora){
+    console.log("Tomar Hora: "+JSON.stringify(hora));
+    if (!confirm("Tomar!")) {
+      return false;  
+    }
+
+    hora.tomada = true;
+    hora.persona = this.fachada.paciente;
+
+    this.fachada.calendarioActualizaHora(this.calendarioActual, hora)
+    .toPromise().then(data => {
+      var datosjson = data as any;
+      console.log("calendarioActualizado: " + JSON.stringify(datosjson));
+      if (datosjson.ok) {
+          this.calendarioActual = datosjson.calendarioActualizado;
+          this.calendarios[this.indexCalendario] = this.calendarioActual;          
+          //this.llenarPaginacion();
+          this.pintarTabla();  
+      } else {             
+        console.log('Problemas al actualizar el calendario' + datosjson.error);              
+        return false;
+      }
+    }).catch(error => {            
+      console.log('Ha ocurrido un error al llamar el server calendarioActualizaHoras: ', JSON.stringify(error));
+      return false;
+      //this.router.navigate(['/error']);
+    });
+
+    /*
+    for(let horaCalendario of this.calendarioActual.horas ){
+      if(horaCalendario.dia == hora.dia && horaCalendario.linea == hora.linea){
+        console.log("horaCalendario: "+JSON.stringify(horaCalendario));
+        horaCalendario.tomada = true;
+        horaCalendario.persona = this.fachada.paciente;
+        break;
+      }
+    }
+    */
+
+    /*
+    let tomada:Horatomada = new Horatomada();
+    tomada.especialista = this.calendarioActual.especialista;
+    tomada.anio = this.calendarioActual.anio;
+    tomada.semana = this.calendarioActual.semana;
+    tomada.dia = hora.dia;
+    tomada.hora = hora.hora;
+    tomada.linea = hora.linea;
+    */
     
+    /*
+    this.fachada.calendarioPersiste(this.calendarioActual)
+          .toPromise().then(data => {
+            var datosjson = data as any;
+            console.log("calendarioActualizado: " + JSON.stringify(datosjson));
+            if (datosjson.ok) {
+              console.log('El calendario se guardo exitosamente, hora: ' + datosjson.time);
+              //this.router.navigate(['/paciente']);
+              this.pintarTabla();
+            } else {             
+              console.log('Problemas al actualizar el calendario' + datosjson.error);              
+              return false;
+            }
+          }).catch(error => {            
+            console.log('Ha ocurrido un error al llamar el server calendarioActualizaHoras: ', JSON.stringify(error));
+            return false;
+            //this.router.navigate(['/error']);
+          });
+          */
+          
+
   }
 
   llenarPaginacion() {
@@ -61,14 +163,12 @@ export class TomarhoraComponent implements OnInit {
 
     if (null == this.calendarios[++this.indexCalendario]) {
       alert("Ultimo calendario disponible por el momento");
+      return;
     } else { //No esta nulo el siguiente calendario asi que se muestra
       this.calendarioActual = this.calendarios[this.indexCalendario];
       this.pintarTabla();
       this.llenarPaginacion();
     }
-
-
-
   }
 
   salir() {
@@ -77,52 +177,27 @@ export class TomarhoraComponent implements OnInit {
     }
   }
 
-  public probar() {
-    //let semanaActual = moment().isoWeekYear(this.calendarioActual.anio).isoWeek(this.calendarioActual.semana);
-    let semanaActual = moment().isoWeekYear(2018).isoWeek(42).add(1, 'w');
-    console.log("semana: " + JSON.stringify(semanaActual));
-    console.log(semanaActual.format('YYYY M W'));
-    console.log("dia: " + semanaActual.isoWeekday());
-
-    let encabezados: Array<any> = new Array(8);
-    encabezados[0] = "horas";
-    encabezados[1] = semanaActual.isoWeekday(1).format('dddd D');//lunes
-    encabezados[2] = semanaActual.isoWeekday(2).format('dddd D');//martes
-    encabezados[3] = semanaActual.isoWeekday(3).format('dddd D');//miercoles
-    encabezados[4] = semanaActual.isoWeekday(4).format('dddd D');//jueves
-    encabezados[5] = semanaActual.isoWeekday(5).format('dddd D');//viernes
-    encabezados[6] = semanaActual.isoWeekday(6).format('dddd D');//sabado
-    encabezados[7] = semanaActual.isoWeekday(7).format('dddd D');//domingo
-
-    let mostrar: string = "";
-    for (let cabeza of encabezados) {
-      mostrar += cabeza + " ";
-    }
-
-    console.log(mostrar);
-
-  }
-
   pintarTabla() {
-    this.lineas = this.fachada.devolverLineasDeHoras(this.calendarioActual.horas);
+    this.lineas = this.fachada.devolverLineasDeHoras(this.calendarioActual.horas); 
     this.horasCabezeras = this.fachada.devolverDiasDeHoras(this.calendarioActual.horas);   
   }
 
   ngOnInit() {
 
-    if (null == this.fachada.paciente || null == this.fachada.persona) {
+    if (null == this.fachada.paciente || null == this.fachada.medico) {
       this.router.navigate(['/paciente']);
     }
 
     let anioActual = moment().isoWeekYear();
     let semanaActual = moment().isoWeek();
-    this.fachada.calendariosLoad(this.fachada.persona.id, anioActual, semanaActual)
+    this.fachada.calendariosLoad(this.fachada.medico.id, anioActual, semanaActual)
       .toPromise().then(data => {
         var datosjson = data as any;        
         if (datosjson.traedatos) {
           this.calendarios = datosjson.calendarios;
           this.indexCalendario = this.calendarios.length - 1;
           this.calendarioActual = this.calendarios[this.indexCalendario];
+          console.log('calendarioActual: '+ JSON.stringify(this.calendarioActual));
           this.llenarPaginacion();
           this.pintarTabla();                  
         } 

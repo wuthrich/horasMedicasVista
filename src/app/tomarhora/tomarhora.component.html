@@ -1,27 +1,27 @@
 <div class="card">
   <div class="container">
-      <table style="width: 100%;">
-          <tr>
-            <td style="width: 10%;"><button (click)="salir()"><i class="material-icons">assignment_return</i>Salir</button></td>
-            <td style="width: 30%;"></td>
-            <td style="width: 10%;"><b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b></td>
-            <td style="width: 30%;"></td>
-            <td style="width: 10%;"></td>
-          </tr>
-        </table>
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 10%;"><button (click)="salir()"><i class="material-icons">assignment_return</i>Salir</button></td>
+        <td style="width: 30%;">{{this.fachada.medico.nombre}}</td>
+        <td style="width: 10%;"><b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b></td>
+        <td style="width: 30%;"></td>
+        <td style="width: 10%;"> <!-- <button (click)="prueba()">Prueba</button> --> </td>
+      </tr>
+    </table>
 
-    
 
-    
-      <table style="width: 100%;">
-        <tr>
-          <td style="width: 10%;"><button [disabled]="0==indexCalendario" (click)="retroceder()"><i class="material-icons">skip_previous</i></button></td>
-          <td style="width: 30%;">{{atras}}</td>
-          <td style="width: 10%;"><b>Semana: {{calendarioActual.semana}} </b> </td>
-          <td style="width: 30%;">{{adelante}}</td>
-          <td style="width: 10%;"><button (click)="seguir()"><i class="material-icons">skip_next</i></button></td>
-        </tr>
-      </table>
+
+
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 10%;"><button [disabled]="0==indexCalendario" (click)="retroceder()"><i class="material-icons">skip_previous</i></button></td>
+        <td style="width: 30%;">{{atras}}</td>
+        <td style="width: 10%;"><b>Semana: {{calendarioActual.semana}} </b> </td>
+        <td style="width: 30%;">{{adelante}}</td>
+        <td style="width: 10%;"><button (click)="seguir()"><i class="material-icons">skip_next</i></button></td>
+      </tr>
+    </table>
   </div>
 </div>
 
@@ -36,19 +36,84 @@
 
       <tr *ngFor="let linea of lineas">
         <td>{{linea.linea}} - {{linea.hora}} </td>
-        <td><input type="checkbox" [(ngModel)]="linea.lunes.ofrecida">
 
-          <div *ngIf="null!=linea.lunes.persona; then thenBlock else elseBlock"></div>
-          <ng-template #thenBlock>linea.lunes.persona.nombre</ng-template>
-          <ng-template #elseBlock></ng-template>
-
+        <td>
+          <div *ngIf="linea.lunes.ofrecida && !linea.lunes.tomada ; else elseBlockLunes">
+            <input type="checkbox" [(ngModel)]="linea.lunes.tomada" (click)="tomar(linea.lunes)">
+          </div>
+          <ng-template #elseBlockLunes>
+            <div *ngIf="null!=linea.lunes.persona && this.fachada.paciente.id == linea.lunes.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.lunes.tomada" (click)="dejar(linea.lunes)">
+            </div>
+          </ng-template>  
         </td>
-        <td><input type="checkbox" [(ngModel)]="linea.martes.ofrecida"></td>
-        <td><input type="checkbox" [(ngModel)]="linea.miercoles.ofrecida"></td>
-        <td><input type="checkbox" [(ngModel)]="linea.jueves.ofrecida"></td>
-        <td><input type="checkbox" [(ngModel)]="linea.viernes.ofrecida"></td>
-        <td><input type="checkbox" [(ngModel)]="linea.sabado.ofrecida"></td>
-        <td><input type="checkbox" [(ngModel)]="linea.domingo.ofrecida"></td>
+
+        <td>          
+          <div *ngIf="(linea.martes.ofrecida && !linea.martes.tomada) ; else elseBlockMartes ">
+            <input type="checkbox" [(ngModel)]="linea.martes.tomada" (click)="tomar(linea.martes)">
+          </div>          
+          <ng-template #elseBlockMartes>
+            <div *ngIf="null!=linea.martes.persona && this.fachada.paciente.id == linea.martes.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.martes.tomada" (click)="dejar(linea.martes)">
+            </div>
+          </ng-template>        
+        </td>
+
+        <td>
+          <div *ngIf="linea.miercoles.ofrecida && !linea.miercoles.tomada ; else elseBlockMiercoles">
+            <input type="checkbox" [(ngModel)]="linea.miercoles.tomada" (click)="tomar(linea.miercoles)">
+          </div>
+          <ng-template #elseBlockMiercoles>
+            <div *ngIf="null!=linea.miercoles.persona && this.fachada.paciente.id == linea.miercoles.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.miercoles.tomada" (click)="dejar(linea.miercoles)">
+            </div>
+          </ng-template> 
+        </td>
+
+        <td>
+          <div *ngIf="linea.jueves.ofrecida && !linea.jueves.tomada ; else elseBlockJueves">
+            <input type="checkbox" [(ngModel)]="linea.jueves.tomada" (click)="tomar(linea.jueves)">
+          </div>
+          <ng-template #elseBlockJueves>
+            <div *ngIf="null!=linea.jueves.persona && this.fachada.paciente.id == linea.jueves.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.jueves.tomada" (click)="dejar(linea.jueves)">
+            </div>
+          </ng-template> 
+        </td>
+
+        <td>
+          <div *ngIf="linea.viernes.ofrecida && !linea.viernes.tomada ; else elseBlockViernes">
+            <input type="checkbox" [(ngModel)]="linea.viernes.tomada" (click)="tomar(linea.viernes)">
+          </div>
+          <ng-template #elseBlockViernes>
+            <div *ngIf="null!=linea.viernes.persona && this.fachada.paciente.id == linea.viernes.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.viernes.tomada" (click)="dejar(linea.viernes)">
+            </div>
+          </ng-template> 
+        </td>
+
+        <td>
+          <div *ngIf="linea.sabado.ofrecida && !linea.sabado.tomada ; else elseBlockSabado">
+            <input type="checkbox" [(ngModel)]="linea.sabado.tomada" (click)="tomar(linea.sabado)">
+          </div>
+          <ng-template #elseBlockSabado>
+            <div *ngIf="null!=linea.sabado.persona && this.fachada.paciente.id == linea.sabado.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.sabado.tomada" (click)="dejar(linea.sabado)">
+            </div>
+          </ng-template> 
+        </td>
+
+        <td>
+          <div *ngIf="linea.domingo.ofrecida && !linea.domingo.tomada ; else elseBlockDomingo">
+            <input type="checkbox" [(ngModel)]="linea.domingo.tomada" (click)="tomar(linea.domingo)">
+          </div>
+          <ng-template #elseBlockDomingo>
+            <div *ngIf="null!=linea.domingo.persona && this.fachada.paciente.id == linea.domingo.persona.id">
+              tomada: <input type="checkbox" [(ngModel)]="linea.domingo.tomada" (click)="dejar(linea.domingo)">
+            </div>
+          </ng-template>
+        </td>
+
       </tr>
 
     </table>

@@ -27,7 +27,7 @@ export class Horascabezeras {
         this.lunesSeleccionado=!this.lunesSeleccionado;
         
         for(let hora of this.lunes){
-            hora.ofrecida=this.lunesSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.lunesSeleccionado;
         }
     }
 
@@ -35,7 +35,7 @@ export class Horascabezeras {
         this.martesSeleccionado=!this.martesSeleccionado;
         
         for(let hora of this.martes){
-            hora.ofrecida=this.martesSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.martesSeleccionado;
         }
     }
 
@@ -43,7 +43,7 @@ export class Horascabezeras {
         this.miercolesSeleccionado=!this.miercolesSeleccionado;
         
         for(let hora of this.miercoles){
-            hora.ofrecida=this.miercolesSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.miercolesSeleccionado;
         }
     }
 
@@ -51,7 +51,7 @@ export class Horascabezeras {
         this.juevesSeleccionado=!this.juevesSeleccionado;
         
         for(let hora of this.jueves){
-            hora.ofrecida=this.juevesSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.juevesSeleccionado;
         }
     }
 
@@ -59,7 +59,7 @@ export class Horascabezeras {
         this.viernesSeleccionado=!this.viernesSeleccionado;
         
         for(let hora of this.viernes){
-            hora.ofrecida=this.viernesSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.viernesSeleccionado;
         }
     }
 
@@ -67,7 +67,7 @@ export class Horascabezeras {
         this.sabadoSeleccionado=!this.sabadoSeleccionado;
         
         for(let hora of this.sabado){
-            hora.ofrecida=this.sabadoSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.sabadoSeleccionado;
         }
     }
 
@@ -75,7 +75,7 @@ export class Horascabezeras {
         this.domingoSeleccionado=!this.domingoSeleccionado;
         
         for(let hora of this.domingo){
-            hora.ofrecida=this.domingoSeleccionado;
+            if(!hora.tomada) hora.ofrecida=this.domingoSeleccionado;
         }
     }
 }

@@ -30,8 +30,55 @@ export class HacerhorarioComponent implements OnInit {
 
   constructor(private fachada: FachadaService, private router: Router) { }
 
+ 
+
   actualizar(){
+
     
+
+    this.fachada.calendarioActualizaTodasHoras(this.calendarioActual)
+    .toPromise().then(data => {
+      var datosjson = data as any;
+      console.log("calendarioActualizado: " + JSON.stringify(datosjson));
+      if (datosjson.ok) {
+          this.calendarioActual = datosjson.calendarioActualizado;
+          this.calendarios[this.indexCalendario] = this.calendarioActual;
+          this.pintarTabla();
+          
+          let horas:Array<Hora>=datosjson.problemasConHorasTomadas;
+          if(horas.length>0){
+            console.log("problemasConHorasTomadas: "+JSON.stringify(datosjson.problemasConHorasTomadas));            
+            let mensaje:string="";
+            for(let hora of horas){
+              mensaje+= this.fachada.diaEnPalabrasCastellano(hora.dia) +", "+hora.hora+", "+ hora.persona.nombre+"\n";
+            }
+
+            alert("No se actualizan horas ya tomadas: \n"+mensaje);
+          }else{
+            alert("Calendario Actualizado");
+          }
+
+      } else {             
+        console.log('Problemas al actualizar el calendario' + datosjson.error); 
+        if(null!=datosjson.calendarioActualizado){
+        this.calendarioActual = datosjson.calendarioActualizado;
+        this.calendarios[this.indexCalendario] = this.calendarioActual;  
+        this.pintarTabla(); 
+        console.log('Calendario Actualizado despues del problema');
+        }
+        
+        if(null!=datosjson.problema){
+          alert("Problema al actualizar horas: "+datosjson.problema.razon);
+        }else{
+          alert("Problema al actualizar horas");
+        }
+        
+      }
+    }).catch(error => {            
+      console.log('Ha ocurrido un error al llamar el server calendarioActualizaHoras: ', JSON.stringify(error));      
+      alert("Error al actualizar"+JSON.stringify(error));
+      //this.router.navigate(['/error']);
+    });
   }
 
   llenarPaginacion() {
@@ -119,38 +166,12 @@ export class HacerhorarioComponent implements OnInit {
       this.router.navigate(['/medico']);
     }
   }
-
-  public probar() {
-    //let semanaActual = moment().isoWeekYear(this.calendarioActual.anio).isoWeek(this.calendarioActual.semana);
-    let semanaActual = moment().isoWeekYear(2018).isoWeek(42).add(1, 'w');
-    console.log("semana: " + JSON.stringify(semanaActual));
-    console.log(semanaActual.format('YYYY M W'));
-    console.log("dia: " + semanaActual.isoWeekday());
-
-    let encabezados: Array<any> = new Array(8);
-    encabezados[0] = "horas";
-    encabezados[1] = semanaActual.isoWeekday(1).format('dddd D');//lunes
-    encabezados[2] = semanaActual.isoWeekday(2).format('dddd D');//martes
-    encabezados[3] = semanaActual.isoWeekday(3).format('dddd D');//miercoles
-    encabezados[4] = semanaActual.isoWeekday(4).format('dddd D');//jueves
-    encabezados[5] = semanaActual.isoWeekday(5).format('dddd D');//viernes
-    encabezados[6] = semanaActual.isoWeekday(6).format('dddd D');//sabado
-    encabezados[7] = semanaActual.isoWeekday(7).format('dddd D');//domingo
-
-    let mostrar: string = "";
-    for (let cabeza of encabezados) {
-      mostrar += cabeza + " ";
-    }
-
-    console.log(mostrar);
-
-  }
-
+  
   seleccionarDeseleccionarTodos() {
     this.seleccionarTodos = !this.seleccionarTodos;
 
     for (let hora of this.calendarioActual.horas) {
-      hora.ofrecida = this.seleccionarTodos;
+      if(!hora.tomada) hora.ofrecida = this.seleccionarTodos;
     }
 
   }
@@ -201,13 +222,13 @@ export class HacerhorarioComponent implements OnInit {
     console.log("botonesHoras: " + boton);
     boton--;
     this.lineas[boton].todosSeleccionados = !this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].lunes.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].martes.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].miercoles.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].jueves.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].viernes.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].sabado.ofrecida = this.lineas[boton].todosSeleccionados;
-    this.lineas[boton].domingo.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].lunes.tomada)    this.lineas[boton].lunes.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].martes.tomada)   this.lineas[boton].martes.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].miercoles.tomada) this.lineas[boton].miercoles.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].jueves.tomada)   this.lineas[boton].jueves.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].viernes.tomada)  this.lineas[boton].viernes.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].sabado.tomada)   this.lineas[boton].sabado.ofrecida = this.lineas[boton].todosSeleccionados;
+    if(!this.lineas[boton].domingo.tomada)  this.lineas[boton].domingo.ofrecida = this.lineas[boton].todosSeleccionados;
   }
 
   private crearPrimerCalendario() {
@@ -231,7 +252,7 @@ export class HacerhorarioComponent implements OnInit {
 
     //primerCalendario.personaId = this.fachada.persona.id;
     //primerCalendario.personaNombre = this.fachada.persona.nombre;
-    primerCalendario.especialista = this.fachada.persona;
+    primerCalendario.especialista = this.fachada.medico;
     primerCalendario.anio = anioActual;
     primerCalendario.mes = Number.parseInt(nombreDia.format('M'));
     primerCalendario.semana = semanaActual;
@@ -255,9 +276,24 @@ export class HacerhorarioComponent implements OnInit {
     console.log("seteos: " + JSON.stringify(this.calendarioActual));
   }
 
+  hayHorasTomadas(){    
+    for(let hora of this.calendarioActual.horas){
+      if(hora.tomada){
+        return true;                
+      }
+    }
+    return false;
+  }
+
   calcular() {
     console.log("Se calculara");
 
+    
+    if(this.hayHorasTomadas()){
+      alert("No puede re-calcular horas, si una ha sido tomada");
+      return;
+    }
+    
     if (this.hacerHoras() == 1) {
       console.log("No calzan las horas");
       return;
@@ -306,6 +342,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.lunes.dia = 1;
       lineaHoras.lunes.hora = horaString;
       lineaHoras.lunes.ofrecida = true;
+      lineaHoras.lunes.tomada = false;
       horas.push(lineaHoras.lunes);
 
       lineaHoras.martes = new Hora();
@@ -313,6 +350,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.martes.dia = 2;
       lineaHoras.martes.hora = horaString;
       lineaHoras.martes.ofrecida = true;
+      lineaHoras.martes.tomada = false;
       horas.push(lineaHoras.martes);
 
       lineaHoras.miercoles = new Hora();
@@ -320,6 +358,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.miercoles.dia = 3;
       lineaHoras.miercoles.hora = horaString;
       lineaHoras.miercoles.ofrecida = true;
+      lineaHoras.miercoles.tomada = false;
       horas.push(lineaHoras.miercoles);
 
       lineaHoras.jueves = new Hora();
@@ -327,6 +366,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.jueves.dia = 4;
       lineaHoras.jueves.hora = horaString;
       lineaHoras.jueves.ofrecida = true;
+      lineaHoras.jueves.tomada = false;
       horas.push(lineaHoras.jueves);
 
       lineaHoras.viernes = new Hora();
@@ -334,6 +374,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.viernes.dia = 5;
       lineaHoras.viernes.hora = horaString;
       lineaHoras.viernes.ofrecida = true;
+      lineaHoras.viernes.tomada = false;
       horas.push(lineaHoras.viernes);
 
       lineaHoras.sabado = new Hora();
@@ -341,6 +382,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.sabado.dia = 6;
       lineaHoras.sabado.hora = horaString;
       lineaHoras.sabado.ofrecida = true;
+      lineaHoras.sabado.tomada = false;
       horas.push(lineaHoras.sabado);
 
       lineaHoras.domingo = new Hora();
@@ -348,6 +390,7 @@ export class HacerhorarioComponent implements OnInit {
       lineaHoras.domingo.dia = 7;
       lineaHoras.domingo.hora = horaString;
       lineaHoras.domingo.ofrecida = true;
+      lineaHoras.domingo.tomada = false;
       horas.push(lineaHoras.domingo);
 
     }
@@ -372,13 +415,13 @@ export class HacerhorarioComponent implements OnInit {
 
   ngOnInit() {
 
-    if (null == this.fachada.persona) {
+    if (null == this.fachada.medico) {
       this.router.navigate(['/medico']);
     }
 
     let anioActual = moment().isoWeekYear();
     let semanaActual = moment().isoWeek();
-    this.fachada.calendariosLoad(this.fachada.persona.id, anioActual, semanaActual)
+    this.fachada.calendariosLoad(this.fachada.medico.id, anioActual, semanaActual)
       .toPromise().then(data => {
         var datosjson = data as any;
         console.log("calendariosLoad: " + JSON.stringify(datosjson));

@@ -6,7 +6,17 @@
             <td style="width: 30%;"></td>
             <td style="width: 10%;"><b>Año: {{calendarioActual.anio}}, Mes: {{calendarioActual.mes}} </b></td>
             <td style="width: 30%;"></td>
-            <td style="width: 10%;" *ngIf="calendarioActual.grabado"><button (click)="actualizar()"><i class="material-icons">assignment_returned</i>Actualizar</button></td>
+            <!--<td style="width: 10%;" *ngIf="calendarioActual.grabado"><button (click)="actualizar()"><i class="material-icons">assignment_returned</i>Actualizar</button></td>-->
+            <td style="width: 10%;"> 
+              <div *ngIf="calendarioActual.grabado ; else elseBlockGrabado">
+                <button (click)="actualizar()"><i class="material-icons">assignment_returned</i>Actualizar</button>
+              </div>
+              <ng-template #elseBlockGrabado>
+                <div>
+                  No Grabado
+                </div>
+              </ng-template>  
+            </td>
           </tr>
         </table>
 
@@ -49,20 +59,93 @@
       </tr>
 
       <tr *ngFor="let linea of lineas">
-        <td><button (click)='botonesHoras(linea.linea)'>{{linea.linea}} - {{linea.hora}}</button> </td>
-        <td><input type="checkbox" [(ngModel)]="linea.lunes.ofrecida">
-
-          <div *ngIf="null!=linea.lunes.persona; then thenBlock else elseBlock"></div>
-          <ng-template #thenBlock>linea.lunes.persona.nombre</ng-template>
-          <ng-template #elseBlock></ng-template>
-
-        </td>
+        <td style="width: 9%"><button (click)='botonesHoras(linea.linea)'>{{linea.linea}} - {{linea.hora}}</button> </td>        
+        <!--
+        <td><input type="checkbox" [(ngModel)]="linea.lunes.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.martes.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.miercoles.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.jueves.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.viernes.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.sabado.ofrecida"></td>
         <td><input type="checkbox" [(ngModel)]="linea.domingo.ofrecida"></td>
+        -->
+        <td style="width: 13%">
+          <div *ngIf="!linea.lunes.tomada ; else elseBlockLunes">
+            <input type="checkbox" [(ngModel)]="linea.lunes.ofrecida">
+          </div>
+          <ng-template #elseBlockLunes>
+            <div>
+              {{linea.lunes.persona.nombre}}- {{linea.lunes.persona.mail}} {{linea.lunes.persona.fono}}
+            </div>
+          </ng-template>  
+        </td>
+
+        <td style="width: 13%">          
+          <div *ngIf="!linea.martes.tomada ; else elseBlockMartes ">
+            <input type="checkbox" [(ngModel)]="linea.martes.ofrecida">
+          </div>          
+          <ng-template #elseBlockMartes>
+            <div>
+              {{linea.martes.persona.nombre}}- {{linea.martes.persona.mail}} {{linea.martes.persona.fono}}
+            </div>
+          </ng-template>        
+        </td>
+
+        <td style="width: 13%">
+          <div *ngIf="!linea.miercoles.tomada ; else elseBlockMiercoles">
+            <input type="checkbox" [(ngModel)]="linea.miercoles.ofrecida">
+          </div>
+          <ng-template #elseBlockMiercoles>
+            <div>
+              {{linea.miercoles.persona.nombre}}- {{linea.miercoles.persona.mail}} {{linea.miercoles.persona.fono}}
+            </div>
+          </ng-template> 
+        </td>
+
+        <td style="width: 13%">
+          <div *ngIf="!linea.jueves.tomada ; else elseBlockJueves">
+            <input type="checkbox" [(ngModel)]="linea.jueves.ofrecida">
+          </div>
+          <ng-template #elseBlockJueves>
+            <div>
+              {{linea.jueves.persona.nombre}}- {{linea.jueves.persona.mail}} {{linea.jueves.persona.fono}}
+            </div>
+          </ng-template> 
+        </td>
+
+        <td style="width: 13%">
+          <div *ngIf="!linea.viernes.tomada ; else elseBlockViernes">
+            <input type="checkbox" [(ngModel)]="linea.viernes.ofrecida">
+          </div>
+          <ng-template #elseBlockViernes>
+            <div>
+              {{linea.viernes.persona.nombre}}- {{linea.viernes.persona.mail}} {{linea.viernes.persona.fono}}
+            </div>
+          </ng-template> 
+        </td>
+
+        <td style="width: 13%">
+          <div *ngIf="!linea.sabado.tomada ; else elseBlockSabado">
+            <input type="checkbox" [(ngModel)]="linea.sabado.ofrecida">
+          </div>
+          <ng-template #elseBlockSabado>
+            <div>
+              {{linea.sabado.persona.nombre}}- {{linea.sabado.persona.mail}} {{linea.sabado.persona.fono}}
+            </div>
+          </ng-template> 
+        </td>
+
+        <td style="width: 13%">
+          <div *ngIf="!linea.domingo.tomada ; else elseBlockDomingo">
+            <input type="checkbox" [(ngModel)]="linea.domingo.ofrecida">
+          </div>
+          <ng-template #elseBlockDomingo>
+            <div>
+              {{linea.domingo.persona.nombre}}- {{linea.domingo.persona.mail}} {{linea.domingo.persona.fono}}
+            </div>
+          </ng-template>
+        </td>
+
       </tr>
 
     </table>

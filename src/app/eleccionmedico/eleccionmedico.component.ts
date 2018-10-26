@@ -168,15 +168,15 @@ export class EleccionmedicoComponent implements OnInit {
       return;
     }
 
-    this.fachada.paciente=this.fachada.persona;//cambio para que la persona siempre sea el medico
+    //this.fachada.paciente=this.fachada.persona;//cambio para que la persona siempre sea el medico
     for(let especialista of this.especialistas){
       if(especialista.id==this.especialistaSeleccionado.id){
-        this.fachada.persona=especialista;
+        this.fachada.medico=especialista;
         break;
       }
     }
 
-    console.log(JSON.stringify(this.fachada.persona));
+    console.log(JSON.stringify(this.fachada.medico));
     console.log(JSON.stringify(this.fachada.paciente));
 
     this.router.navigate(['/tomarhora']);
