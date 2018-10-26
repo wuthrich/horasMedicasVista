@@ -12,6 +12,7 @@ import { EleccionmedicoComponent } from './eleccionmedico/eleccionmedico.compone
 import { TomarhoraComponent } from './tomarhora/tomarhora.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/paciente', pathMatch: 'full'},
   { path: 'tomarhora', component: TomarhoraComponent },
   { path: 'eleccionmedico', component: EleccionmedicoComponent },
   { path: 'paciente', component: DatospacienteComponent },

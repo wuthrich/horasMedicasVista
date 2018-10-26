@@ -46,7 +46,7 @@ export class FachadaService {
         diaEnPalabra = "martes";
         break;
       case 3:
-        diaEnPalabra = "miercoles";
+        diaEnPalabra = "miércoles";
         break;
       case 4:
         diaEnPalabra = "jueves";
@@ -55,7 +55,7 @@ export class FachadaService {
         diaEnPalabra = "viernes";
         break;
       case 6:
-        diaEnPalabra = "sabado";
+        diaEnPalabra = "sábado";
         break;
       case 7:
         diaEnPalabra = "domingo";
