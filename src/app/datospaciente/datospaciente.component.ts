@@ -15,7 +15,7 @@ function escapeRegExp(string) {
 })
 export class DatospacienteComponent implements OnInit {
 
-  private persona: Persona;
+  public persona: Persona;
  
   constructor(private fachada: FachadaService, private router: Router) { }
 

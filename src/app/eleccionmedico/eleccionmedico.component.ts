@@ -13,12 +13,12 @@ declare var moment;
 })
 export class EleccionmedicoComponent implements OnInit {
 
-  private regiones: Opcionselect[];
-  private comunas: Opcionselect[];
-  private centros: Opcionselect[];
-  private especialidades: Opcionselect[];
-  private especialistas: Persona[];
-  private especialistaSeleccionado: Persona;
+  public regiones: Opcionselect[];
+  public comunas: Opcionselect[];
+  public centros: Opcionselect[];
+  public especialidades: Opcionselect[];
+  public especialistas: Persona[];
+  public especialistaSeleccionado: Persona;
 
   constructor(private fachada: FachadaService, private router: Router) { }
 

@@ -15,9 +15,9 @@ function escapeRegExp(string) {
 })
 export class DatosmedicoComponent implements OnInit {
 
-  private persona: Persona;
-  private comunas: Opcionselect[];
-  private centros: Opcionselect[];
+  public persona: Persona;
+  public comunas: Opcionselect[];
+  public centros: Opcionselect[];
 
   constructor(private fachada: FachadaService, private router: Router) { }
 

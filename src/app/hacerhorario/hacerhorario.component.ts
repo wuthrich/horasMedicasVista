@@ -15,17 +15,17 @@ declare var moment;
 })
 export class HacerhorarioComponent implements OnInit {
 
-  private calendarios: Array<Calendariosemanal>;
-  private calendarioActual: Calendariosemanal;
-  private indexCalendario: number;
-  private atras: string;
-  private adelante: string;
-  private desdeComponente: string;
-  private hastaComponente: string;
-  private longitudHoraComponente: number;
-  private lineas: Array<Horaslinea>;
-  private seleccionarTodos: boolean = true;
-  private horasCabezeras: Horascabezeras;
+  public calendarios: Array<Calendariosemanal>;
+  public calendarioActual: Calendariosemanal;
+  public indexCalendario: number;
+  public atras: string;
+  public adelante: string;
+  public desdeComponente: string;
+  public hastaComponente: string;
+  public longitudHoraComponente: number;
+  public lineas: Array<Horaslinea>;
+  public seleccionarTodos: boolean = true;
+  public horasCabezeras: Horascabezeras;
 
 
   constructor(private fachada: FachadaService, private router: Router) { }
